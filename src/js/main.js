@@ -1,4 +1,4 @@
-import { loadHeaderFooter } from './utils.js';
+import { loadHeaderFooter, initBottomNav } from './utils.js';
 import { fetchCoins, formatCoinData, fetchGlobalData } from './api.js';
 import { renderCoins, setupSearch } from './ui.js';
 import { renderVolatilityChart } from './chart.js';
@@ -23,6 +23,9 @@ function formatLargeNumber(value) {
 async function init() {
   // Load header and sidebar
   await loadHeaderFooter();
+
+  // Initialize mobile bottom navigation
+  initBottomNav();
 
   // Fetch cryptocurrency data
   const rawCoins = await fetchCoins(50);

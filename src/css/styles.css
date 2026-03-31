@@ -325,6 +325,19 @@ body {
   flex-shrink: 0;
 }
 
+.header-brand {
+  display: none;
+}
+
+.header-brand-title {
+  color: var(--accent-gold);
+  font-size: 1rem;
+  font-weight: 700;
+  text-transform: uppercase;
+  letter-spacing: 0.8px;
+  margin: 0;
+}
+
 .header-title-section {
   display: flex;
   flex-direction: column;
@@ -398,7 +411,8 @@ body {
 }
 
 .icon-search,
-.icon-theme {
+.icon-theme,
+.icon-bell {
   width: 18px;
   height: 18px;
 }
@@ -411,6 +425,38 @@ body {
 .icon-theme {
   fill: currentColor;
   stroke: none;
+}
+
+.icon-bell {
+  stroke: currentColor;
+  fill: none;
+}
+
+.header-bell-button {
+  background: none;
+  border: none;
+  color: var(--accent-gold);
+  cursor: pointer;
+  padding: 0.3rem;
+  border-radius: 6px;
+  transition: all 0.3s ease;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  flex-shrink: 0;
+  width: 28px;
+  height: 28px;
+  margin: 0 0.5rem;
+}
+
+.header-bell-button:hover {
+  background-color: var(--accent-gold);
+  color: var(--bg-primary);
+}
+
+.header-bell-button .icon-bell {
+  width: 18px;
+  height: 18px;
 }
 
 .theme-toggle {
@@ -453,6 +499,121 @@ body {
   overflow-y: auto;
   overflow-x: hidden;
   background-color: var(--bg-primary);
+}
+
+/* ===========================
+   PORTFOLIO SECTION (MOBILE ONLY)
+   =========================== */
+
+.portfolio-section {
+  display: none;
+}
+
+.portfolio-value-card {
+  background-color: var(--bg-secondary);
+  border: 1px solid var(--border-color);
+  border-radius: 8px;
+  padding: 1.25rem;
+  text-align: center;
+}
+
+.portfolio-label {
+  color: var(--text-tertiary);
+  font-size: 0.65rem;
+  text-transform: uppercase;
+  letter-spacing: 0.2px;
+  margin-bottom: 0.5rem;
+  font-weight: 700;
+}
+
+.portfolio-value {
+  color: var(--accent-gold);
+  font-size: 1.8rem;
+  font-weight: 700;
+  margin-bottom: 0.25rem;
+  letter-spacing: 0.2px;
+}
+
+.portfolio-change {
+  color: var(--color-positive);
+  font-size: 0.75rem;
+  font-weight: 600;
+  text-transform: uppercase;
+  letter-spacing: 0.1px;
+  margin-bottom: 1rem;
+}
+
+.portfolio-change.negative {
+  color: var(--color-negative);
+}
+
+.view-portfolio-btn {
+  width: 100%;
+  background-color: transparent;
+  border: 1px solid var(--accent-gold);
+  color: var(--accent-gold);
+  cursor: pointer;
+  padding: 0.6rem 1rem;
+  border-radius: 6px;
+  font-size: 0.7rem;
+  font-weight: 600;
+  text-transform: uppercase;
+  letter-spacing: 0.3px;
+  transition: all 0.3s ease;
+}
+
+.view-portfolio-btn:hover {
+  background-color: var(--accent-gold);
+  color: var(--bg-primary);
+}
+
+/* ===========================
+   BOTTOM NAVIGATION BAR (MOBILE ONLY)
+   =========================== */
+
+.bottom-nav {
+  display: none;
+}
+
+.bottom-nav-item {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  gap: 0.4rem;
+  padding: 0.75rem;
+  color: var(--text-secondary);
+  text-decoration: none;
+  border: none;
+  background: none;
+  cursor: pointer;
+  transition: all 0.3s ease;
+  font-size: 0.6rem;
+  font-weight: 600;
+  text-transform: uppercase;
+  letter-spacing: 0.1px;
+}
+
+.bottom-nav-item:hover {
+  color: var(--accent-gold);
+}
+
+.bottom-nav-item.active {
+  color: var(--accent-gold);
+}
+
+.bottom-nav-icon {
+  width: 24px;
+  height: 24px;
+  stroke: currentColor;
+  fill: none;
+  stroke-width: 2;
+}
+
+.bottom-nav-label {
+  font-size: 0.55rem;
+  text-transform: uppercase;
+  letter-spacing: 0.05px;
 }
 
 /* ===========================
@@ -809,11 +970,6 @@ body {
   letter-spacing: 0.1px;
   font-weight: 600;
 }
-  font-size: 0.7rem;
-  font-weight: 600;
-  text-transform: uppercase;
-  letter-spacing: 0.2px;
-}
 
 /* ===========================
    RESPONSIVE DESIGN
@@ -828,17 +984,30 @@ body {
     width: 100%;
     height: auto;
     border-right: none;
-    border-bottom: 2px solid var(--sidebar-border);
-    position: relative;
+    border-bottom: none;
+    border-top: 1px solid var(--border-color);
+    position: fixed;
+    bottom: 0;
+    left: 0;
+    right: 0;
+    z-index: 100;
+    order: 2;
+    padding: 0;
+    display: flex;
+    flex-direction: column;
+    background-color: var(--bg-secondary);
   }
 
   .sidebar-header {
-    padding: 1rem 1rem;
+    display: none;
   }
 
   .sidebar-nav {
     flex-direction: row;
     width: 100%;
+    height: auto;
+    padding: 0.5rem 0;
+    justify-content: space-around;
   }
 
   .sidebar-menu {
@@ -846,36 +1015,132 @@ body {
     gap: 0;
     padding: 0;
     flex: 1;
+    display: flex;
+    width: 100%;
+    justify-content: space-around;
   }
 
   .sidebar-item {
-    flex: 1;
+    flex: 0 0 auto;
     justify-content: center;
-    padding: 0.75rem 0.5rem;
+    padding: 0.5rem 0;
     border-radius: 0;
+    border-bottom: none;
+    gap: 0.35rem;
+    flex-direction: column;
+    align-items: center;
+    font-size: 0.48rem;
+    color: var(--text-secondary);
   }
 
   .sidebar-item.active {
     border-radius: 0;
     background-color: transparent;
-    border-bottom: 3px solid var(--accent-gold);
+    border-bottom: none;
+    color: var(--accent-gold);
   }
 
   .sidebar-label {
-    display: none;
+    display: block;
+    font-size: 0.48rem;
+    white-space: nowrap;
+    text-transform: uppercase;
+    letter-spacing: 0.05px;
+    font-weight: 600;
+  }
+
+  .sidebar-icon {
+    font-size: 1.3rem;
+    width: 24px;
+    height: 24px;
   }
 
   .sidebar-footer {
     display: none;
   }
 
-  .header {
-    padding: 0.75rem 1rem;
-    flex-wrap: wrap;
+  .content-wrapper {
+    order: 1;
+    margin-bottom: 65px;
   }
 
   .header {
+    padding: 0.75rem 1rem;
+    gap: 0;
+    flex-wrap: wrap;
+    flex-direction: column;
+    border-bottom: 1px solid var(--border-color);
+  }
+
+  .header-brand {
+    display: flex;
+    flex: 0 0 100%;
+    justify-content: space-between;
+    align-items: center;
+    padding: 0;
+    border-bottom: none;
+    margin-bottom: 0.75rem;
+  }
+
+  .header-brand-title {
+    font-size: 0.95rem;
+    font-weight: 700;
+    text-transform: uppercase;
+    letter-spacing: 0.8px;
+  }
+
+  .header-title-section {
+    display: none;
+  }
+
+  .header-title {
+    display: none;
+  }
+
+  .header-subtitle {
+    display: none;
+  }
+
+  .header-search-wrapper {
+    flex: 0 0 100%;
+    display: flex;
+    justify-content: flex-start;
+    align-items: center;
+    border: none;
+    padding: 0;
     gap: 0.5rem;
+    margin: 0;
+    background: none;
+  }
+
+  .header-search-input {
+    flex: 1;
+    background: transparent;
+    border: none;
+    color: var(--text-primary);
+    font-size: 0.75rem;
+    padding: 0;
+    outline: none;
+  }
+
+  .header-search-input::placeholder {
+    color: var(--text-tertiary);
+  }
+
+  .header-search-button {
+    display: flex;
+    width: 18px;
+    height: 18px;
+    padding: 0;
+  }
+
+  .theme-toggle {
+    display: none;
+  }
+
+  .content-wrapper {
+    order: 1;
+    margin-bottom: 70px;
   }
 
   .page-header {
@@ -887,44 +1152,240 @@ body {
     font-size: 1.3rem;
   }
 
-  .market-stats-grid {
-    grid-template-columns: repeat(2, 1fr);
-    gap: 0.75rem;
+  .portfolio-section {
+    display: block !important;
     padding: 1rem;
+    margin-bottom: 0;
+  }
+
+  .portfolio-value-card {
+    background-color: var(--bg-secondary);
+    border: 1px solid var(--border-color);
+    border-radius: 8px;
+    padding: 1.25rem;
+    text-align: center;
+  }
+
+  .portfolio-label {
+    color: var(--text-tertiary);
+    font-size: 0.6rem;
+    text-transform: uppercase;
+    letter-spacing: 0.2px;
+    margin-bottom: 0.5rem;
+    font-weight: 700;
+  }
+
+  .portfolio-value {
+    color: var(--accent-gold);
+    font-size: 1.8rem;
+    font-weight: 700;
+    margin-bottom: 0.25rem;
+    letter-spacing: 0.2px;
+  }
+
+  .portfolio-change {
+    color: var(--color-positive);
+    font-size: 0.75rem;
+    font-weight: 600;
+    text-transform: uppercase;
+    letter-spacing: 0.1px;
+    margin-bottom: 1rem;
+  }
+
+  .portfolio-change.negative {
+    color: var(--color-negative);
+  }
+
+  .view-portfolio-btn {
+    width: 100%;
+    background-color: transparent;
+    border: 1px solid var(--accent-gold);
+    color: var(--accent-gold);
+    cursor: pointer;
+    padding: 0.6rem 1rem;
+    border-radius: 6px;
+    font-size: 0.7rem;
+    font-weight: 600;
+    text-transform: uppercase;
+    letter-spacing: 0.3px;
+    transition: all 0.3s ease;
+  }
+
+  .view-portfolio-btn:hover {
+    background-color: var(--accent-gold);
+    color: var(--bg-primary);
+  }
+
+  .market-stats-grid {
+    display: grid;
+    grid-template-columns: repeat(2, 1fr);
+    gap: 1rem;
+    padding: 1rem;
+    overflow: visible;
   }
 
   .market-stat-card {
     padding: 1rem;
+    border-radius: 8px;
+  }
+
+  .stat-label {
+    font-size: 0.6rem;
+    margin-bottom: 0.4rem;
   }
 
   .stat-value {
     font-size: 1.3rem;
+    margin-bottom: 0.2rem;
+  }
+
+  .stat-change {
+    font-size: 0.55rem;
   }
 
   .assets-section {
-    padding: 0 1rem 1rem 1rem;
+    padding: 1.5rem 1rem 1rem 1rem;
+    position: relative;
+  }
+
+  .assets-section::before {
+    content: 'Market Assets';
+    display: block;
+    color: var(--text-primary);
+    font-size: 0.95rem;
+    font-weight: 700;
+    margin-bottom: 1rem;
+    text-transform: capitalize;
+    position: absolute;
+    top: 1rem;
+    left: 1rem;
+  }
+
+  .assets-section::after {
+    content: 'See All';
+    display: block;
+    position: absolute;
+    top: 1rem;
+    right: 1rem;
+    color: var(--accent-gold);
+    font-size: 0.7rem;
+    font-weight: 600;
+    text-transform: capitalize;
+    cursor: pointer;
   }
 
   .crypto-table {
-    font-size: 0.8rem;
+    border: none;
+    background: transparent;
+    overflow: visible;
+  }
+
+  .crypto-table thead {
+    display: none;
   }
 
   .crypto-table thead th {
-    padding: 0.75rem 0.5rem;
-    font-size: 0.65rem;
+    display: none;
+  }
+
+  .crypto-table tbody {
+    display: flex;
+    flex-direction: column;
+    gap: 0.75rem;
+  }
+
+  .crypto-table tbody tr {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    padding: 1rem;
+    background-color: var(--bg-secondary);
+    border: 1px solid var(--border-color);
+    border-radius: 8px;
+    border-bottom: none;
+  }
+
+  .crypto-table tbody tr:hover {
+    background-color: var(--bg-secondary);
+  }
+
+  .crypto-table tbody tr:last-child {
+    border-bottom: 1px solid var(--border-color);
   }
 
   .crypto-table td {
-    padding: 0.75rem 0.5rem;
+    padding: 0;
+    font-size: 0.85rem;
+  }
+
+  .col-rank {
+    display: none;
   }
 
   .col-asset {
     width: auto;
+    flex: 1;
+  }
+
+  .col-price {
+    width: auto;
+    text-align: right;
+  }
+
+  .col-change {
+    display: none;
+  }
+
+  .col-market-cap {
+    display: none;
+  }
+
+  .coin-row .rank {
+    display: none;
+  }
+
+  .coin-row .asset {
+    gap: 0.75rem;
+    flex: 1;
+  }
+
+  .coin-row .price {
+    text-align: right;
+    font-size: 0.85rem;
+  }
+
+  .coin-row .change {
+    display: none;
+  }
+
+  .coin-row .market-cap {
+    display: none;
   }
 
   .coin-image {
-    width: 28px;
-    height: 28px;
+    width: 32px;
+    height: 32px;
+  }
+
+  .asset-info {
+    flex-direction: row;
+    gap: 0.75rem;
+  }
+
+  .asset-info > div {
+    gap: 0.2rem;
+  }
+
+  .coin-symbol {
+    font-size: 0.75rem;
+  }
+
+  .coin-name {
+    font-size: 0.65rem;
+  }
+
+  .view-more-btn {
+    display: none !important;
   }
 
   .chart-section {
@@ -932,28 +1393,92 @@ body {
   }
 
   .chart-container {
-    height: 200px;
-    padding: 1rem;
-  }
-}
-  }
-
-  .coin-symbol {
-    font-size: 0.8rem;
-  }
-
-  .coin-name {
-    font-size: 0.7rem;
-  }
-
-  .chart-container {
-    padding: 1rem;
-    height: 200px;
+    height: 150px;
+    padding: 0.75rem;
+    border-radius: 8px;
+    margin-bottom: 0.4rem;
   }
 
   .chart-labels {
-    padding: 0.5rem 1rem;
-    font-size: 0.7rem;
+    padding: 0.4rem 0.5rem;
+    font-size: 0.55rem;
+    gap: 0.25rem;
+  }
+
+  /* Portfolio Section - Show on Mobile */
+  .portfolio-section {
+    display: block;
+    padding: 0.75rem;
+  }
+
+  .portfolio-value-card {
+    padding: 1rem;
+  }
+
+  .portfolio-label {
+    font-size: 0.6rem;
+    margin-bottom: 0.4rem;
+  }
+
+  .portfolio-value {
+    font-size: 1.6rem;
+  }
+
+  .portfolio-change {
+    font-size: 0.65rem;
+    margin-bottom: 0.75rem;
+  }
+
+  .view-portfolio-btn {
+    padding: 0.5rem;
+    font-size: 0.65rem;
+  }
+
+  /* Bottom Navigation - Show on Mobile */
+  .bottom-nav {
+    display: flex;
+    position: fixed;
+    bottom: 0;
+    left: 0;
+    right: 0;
+    background-color: var(--bg-secondary);
+    border-top: 2px solid var(--accent-gold);
+    z-index: 101;
+    flex-direction: row;
+    justify-content: space-around;
+    align-items: center;
+    padding: 0;
+    height: 70px;
+    box-shadow: 0 -2px 10px rgba(0, 0, 0, 0.2);
+  }
+
+  .bottom-nav-item {
+    flex: 1;
+    height: 100%;
+    position: relative;
+  }
+
+  .bottom-nav-item.active::before {
+    content: '';
+    position: absolute;
+    top: 0;
+    left: 0;
+    right: 0;
+    height: 3px;
+    background-color: var(--accent-gold);
+  }
+
+  /* Content wrapper adjustments for bottom nav */
+  .content-wrapper {
+    margin-bottom: 70px;
+  }
+
+  .theme-toggle {
+    display: none;
+  }
+
+  .header-bell-button {
+    display: flex;
   }
 }
 

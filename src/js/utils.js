@@ -64,3 +64,47 @@ function initMenuToggle() {
   });
 }
 
+/**
+ * Initialize bottom navigation for mobile
+ */
+export function initBottomNav() {
+  const bottomNav = document.getElementById('bottom-nav');
+  const bottomNavItems = document.querySelectorAll('.bottom-nav-item');
+  
+  if (!bottomNav) return;
+
+  // Show bottom nav on mobile (screen < 768px)
+  const isMobile = () => window.innerWidth < 768;
+  
+  // Update bottom nav visibility on load and resize
+  const updateBottomNav = () => {
+    if (isMobile()) {
+      bottomNav.classList.add('show');
+    } else {
+      bottomNav.classList.remove('show');
+    }
+  };
+
+  // Initial check
+  updateBottomNav();
+
+  // Handle window resize
+  window.addEventListener('resize', updateBottomNav);
+
+  // Handle bottom nav item clicks
+  bottomNavItems.forEach(item => {
+    item.addEventListener('click', (e) => {
+      e.preventDefault();
+      // Remove active class from all items
+      bottomNavItems.forEach(navItem => navItem.classList.remove('active'));
+      
+      // Add active class to clicked item
+      item.classList.add('active');
+
+      // Optionally handle different tabs here
+      const tabName = item.getAttribute('data-tab');
+      console.log(`Navigating to tab: ${tabName}`);
+    });
+  });
+}
+
