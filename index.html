@@ -1,0 +1,96 @@
+<!DOCTYPE html>
+<html lang="en" data-theme="dark">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Crypto Portfolio Tracker</title>
+  <link rel="stylesheet" href="./src/css/styles.css">
+</head>
+<body>
+  <div class="app-container">
+    <!-- Sidebar with CRYPTOVEAL -->
+    <aside id="sidebar-container" class="sidebar"></aside>
+
+    <!-- Main Content Area -->
+    <div class="content-wrapper">
+      <!-- Top Header with Menu & Theme Toggle -->
+      <div id="header-container"></div>
+
+      <main class="main-content">
+        <!-- Market Stats Grid (4 cards with real data) -->
+        <div class="market-stats-grid" id="market-stats-container">
+          <div class="market-stat-card">
+            <p class="stat-label">GLOBAL MARKET CAP</p>
+            <p class="stat-value" id="global-market-cap">-</p>
+            <p class="stat-change" id="global-market-cap-change">-</p>
+          </div>
+          <div class="market-stat-card">
+            <p class="stat-label">BTC DOMINANCE</p>
+            <p class="stat-value" id="btc-dominance">-</p>
+            <p class="stat-change" id="btc-dominance-change">-</p>
+          </div>
+          <div class="market-stat-card">
+            <p class="stat-label">24H VOLUME</p>
+            <p class="stat-value" id="volume-24h">-</p>
+            <p class="stat-change" id="volume-24h-change">-</p>
+          </div>
+          <div class="market-stat-card">
+            <p class="stat-label">TOTAL VOLUME</p>
+            <p class="stat-value" id="total-volume">-</p>
+            <p class="stat-change" id="total-volume-change">-</p>
+          </div>
+        </div>
+
+        <!-- Cryptocurrencies Table -->
+        <section class="assets-section">
+          <table class="crypto-table" id="crypto-table">
+            <thead>
+              <tr>
+                <th class="col-rank">#</th>
+                <th class="col-asset">ASSET</th>
+                <th class="col-price">PRICE (USD)</th>
+                <th class="col-change">24H CHANGE</th>
+                <th class="col-market-cap">MARKET CAP</th>
+              </tr>
+            </thead>
+            <tbody id="coins-list">
+              <tr class="loading-row">
+                <td colspan="5">Loading coins...</td>
+              </tr>
+            </tbody>
+          </table>
+          <button id="view-more-btn" class="view-more-btn" style="display: none;">VIEW MORE</button>
+        </section>
+
+        <!-- Market Volatility Index Chart -->
+        <section class="chart-section">
+          <h2 class="chart-title">MARKET VOLATILITY INDEX</h2>
+          <div class="chart-container" id="volatility-chart">
+            <svg viewBox="0 0 1000 240" class="volatility-chart-svg" preserveAspectRatio="none">
+              <defs>
+                <linearGradient id="chartGradient" x1="0%" y1="0%" x2="0%" y2="100%">
+                  <stop offset="0%" style="stop-color:#d4af37;stop-opacity:0.5" />
+                  <stop offset="100%" style="stop-color:#d4af37;stop-opacity:0" />
+                </linearGradient>
+              </defs>
+              <path id="chart-area" d="" fill="url(#chartGradient)" stroke="none"/>
+              <polyline id="chart-line" points="" fill="none" stroke="#d4af37" stroke-width="3"/>
+            </svg>
+          </div>
+          <div class="chart-labels">
+            <span>00:00</span>
+            <span>04:00</span>
+            <span>08:00</span>
+            <span>12:00</span>
+            <span>16:00</span>
+            <span>20:00</span>
+          </div>
+        </section>
+      </main>
+    </div>
+  </div>
+
+  <!-- Load main.js as ES module -->
+  <script type="module" src="./src/js/main.js"></script>
+</body>
+</html>
