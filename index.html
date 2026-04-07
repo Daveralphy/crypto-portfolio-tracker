@@ -17,16 +17,6 @@
       <div id="header-container"></div>
 
       <main class="main-content">
-        <!-- Portfolio Value Section (Mobile) -->
-        <section class="portfolio-section">
-          <div class="portfolio-value-card">
-            <p class="portfolio-label">PORTFOLIO VALUE</p>
-            <p class="portfolio-value">$12,450.80</p>
-            <p class="portfolio-change">+5.2%</p>
-            <button class="view-portfolio-btn">VIEW FULL PORTFOLIO</button>
-          </div>
-        </section>
-
         <!-- Market Stats Grid (4 cards with real data) -->
         <div class="market-stats-grid" id="market-stats-container">
           <div class="market-stat-card">
@@ -97,6 +87,27 @@
           </div>
         </section>
       </main>
+    </div>
+  </div>
+
+  <!-- Add to Portfolio Modal -->
+  <div id="add-portfolio-modal" class="modal" style="display: none;">
+    <div class="modal-content">
+      <div class="modal-header">
+        <h2 id="modal-coin-name">Add to Portfolio</h2>
+        <button id="modal-close-btn" class="modal-close">&times;</button>
+      </div>
+      <div class="modal-body">
+        <div class="modal-section">
+          <label for="portfolio-amount">Amount</label>
+          <input type="number" id="portfolio-amount" placeholder="Enter amount" step="0.00000001" min="0">
+          <p class="modal-price-info" id="modal-price-info"></p>
+        </div>
+      </div>
+      <div class="modal-footer">
+        <button id="modal-cancel-btn" class="modal-btn-secondary">Cancel</button>
+        <button id="modal-confirm-btn" class="modal-btn-primary">Add to Portfolio</button>
+      </div>
     </div>
   </div>
 

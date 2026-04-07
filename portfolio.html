@@ -1,0 +1,71 @@
+<!DOCTYPE html>
+<html lang="en" data-theme="dark">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Portfolio - Crypto Portfolio Tracker</title>
+  <link rel="stylesheet" href="./src/css/styles.css">
+</head>
+<body>
+  <div class="app-container">
+    <!-- Sidebar with CRYPTOVEAL -->
+    <aside id="sidebar-container" class="sidebar"></aside>
+
+    <!-- Main Content Area -->
+    <div class="content-wrapper">
+      <!-- Top Header with Menu & Theme Toggle -->
+      <div id="header-container"></div>
+
+      <main class="main-content">
+        <!-- Portfolio Value Section -->
+        <section class="portfolio-section">
+          <div class="portfolio-value-card">
+            <p class="portfolio-label">TOTAL PORTFOLIO VALUE</p>
+            <p class="portfolio-value" id="total-portfolio-value">$0.00</p>
+            <p class="portfolio-change" id="portfolio-change">-</p>
+            <div class="portfolio-currency-selector">
+              <label for="currency-select">Convert to:</label>
+              <select id="currency-select">
+                <option value="USD">USD - US Dollar</option>
+                <option value="NGN">NGN - Nigerian Naira</option>
+                <option value="EUR">EUR - Euro</option>
+              </select>
+            </div>
+          </div>
+        </section>
+
+        <!-- Portfolio Assets Table -->
+        <section class="assets-section">
+          <div class="section-header">
+            <h2>YOUR HOLDINGS</h2>
+          </div>
+          <table class="crypto-table" id="portfolio-table">
+            <thead>
+              <tr>
+                <th class="col-asset">ASSET</th>
+                <th class="col-price">PRICE (USD)</th>
+                <th class="col-amount">AMOUNT</th>
+                <th class="col-total">TOTAL VALUE</th>
+                <th class="col-action">ACTION</th>
+              </tr>
+            </thead>
+            <tbody id="portfolio-list">
+              <tr class="no-data">
+                <td colspan="5">No coins in your portfolio yet. Start adding coins from the market!</td>
+              </tr>
+            </tbody>
+          </table>
+        </section>
+
+        <!-- Back to Market Button -->
+        <section class="button-section">
+          <button id="back-to-market-btn" class="back-btn">BACK TO MARKET</button>
+        </section>
+      </main>
+    </div>
+  </div>
+
+  <!-- Load portfolio.js as ES module -->
+  <script type="module" src="./src/js/portfolio.js"></script>
+</body>
+</html>

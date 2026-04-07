@@ -1,0 +1,36 @@
+<!DOCTYPE html>
+<html lang="en" data-theme="dark">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Alerts - Crypto Portfolio Tracker</title>
+  <link rel="stylesheet" href="./src/css/styles.css">
+</head>
+<body>
+  <div class="app-container">
+    <!-- Sidebar with CRYPTOVEAL -->
+    <aside id="sidebar-container" class="sidebar"></aside>
+
+    <!-- Main Content Area -->
+    <div class="content-wrapper">
+      <!-- Top Header with Menu & Theme Toggle -->
+      <div id="header-container"></div>
+
+      <main class="main-content">
+        <!-- Alerts Section -->
+        <section class="assets-section">
+          <div class="section-header">
+            <h2>YOUR ALERTS</h2>
+          </div>
+          <div class="alerts-container" id="alerts-container">
+            <!-- Alerts will be rendered here -->
+          </div>
+        </section>
+      </main>
+    </div>
+  </div>
+
+  <!-- Load alerts.js as ES module -->
+  <script type="module" src="./src/js/alerts.js"></script>
+</body>
+</html>

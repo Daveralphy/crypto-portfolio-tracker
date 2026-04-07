@@ -1,3 +1,51 @@
+// Global currency state
+let currentCurrency = localStorage.getItem('preferred_currency') || 'USD';
+
+// Listen for currency changes from other pages
+window.addEventListener('currencyChanged', (e) => {
+  currentCurrency = e.detail.currency;
+});
+
+/**
+ * Get currency symbol
+ * @param {string} currency - Currency code
+ * @returns {string} Currency symbol
+ */
+function getCurrencySymbol(currency) {
+  const symbols = {
+    'USD': '$',
+    'EUR': '€',
+    'GBP': '£',
+    'JPY': '¥',
+    'AUD': 'A$',
+    'CAD': 'C$',
+    'NGN': '₦'
+  };
+  return symbols[currency] || '$';
+}
+
+/**
+ * Convert currency using ExchangeRate API
+ * @param {number} amount - Amount to convert
+ * @param {string} fromCurrency - From currency code
+ * @param {string} toCurrency - To currency code
+ * @returns {Promise<number>} Converted amount
+ */
+async function convertCurrency(amount, fromCurrency, toCurrency) {
+  if (fromCurrency === toCurrency) return amount;
+  try {
+    const response = await fetch(`https://api.exchangerate-api.com/v4/latest/${fromCurrency}`);
+    if (!response.ok) throw new Error('Failed to fetch exchange rates');
+    const data = await response.json();
+    const rate = data.rates[toCurrency];
+    if (!rate) throw new Error(`Currency ${toCurrency} not found`);
+    return amount * rate;
+  } catch (error) {
+    console.error('Error converting currency:', error);
+    return amount;
+  }
+}
+
 /**
  * Render a list of coins to the DOM in table format
  * @param {Array} coins - Array of coin objects
@@ -17,6 +65,19 @@ export function renderCoins(coins, containerId = 'coins-list', limit = 5) {
   // Show only limited rows initially
   const displayCoins = coins.slice(0, limit);
   container.innerHTML = displayCoins.map((coin, index) => createCoinTableRow(coin, index + 1)).join('');
+  
+  // Format prices for all coins with current currency
+  displayCoins.forEach((coin, index) => {
+    formatPrice(coin.price).then(formattedPrice => {
+      const rows = container.querySelectorAll('.coin-row');
+      if (rows[index]) {
+        const priceCell = rows[index].querySelector('.price');
+        if (priceCell) {
+          priceCell.textContent = formattedPrice;
+        }
+      }
+    });
+  });
   
   // Show/hide View More button
   const viewMoreBtn = document.getElementById('view-more-btn');
@@ -47,7 +108,7 @@ function createCoinTableRow(coin, rank) {
   const marketCap = coin.marketCap ? formatMarketCap(coin.marketCap) : 'N/A';
 
   return `
-    <tr class="coin-row" data-coin-id="${coin.id}">
+    <tr class="coin-row" data-coin-id="${coin.id}" data-coin-name="${coin.name}" data-coin-price="${coin.price}" data-coin-symbol="${coin.symbol}">
       <td class="rank">${rank}</td>
       <td class="asset">
         <div class="asset-info">
@@ -58,23 +119,37 @@ function createCoinTableRow(coin, rank) {
           </div>
         </div>
       </td>
-      <td class="price">${formatPrice(coin.price)}</td>
+      <td class="price">-</td>
       <td class="change ${changeClass}">${changeSymbol}${priceChange.toFixed(2)}%</td>
-      <td class="market-cap">${marketCap}</td>
+      <td class="market-cap">
+        <div class="market-cap-content">
+          <span>${marketCap}</span>
+          <button class="add-portfolio-btn" data-coin-id="${coin.id}" title="Add to Portfolio">+ Add</button>
+        </div>
+      </td>
     </tr>
   `;
 }
 
 /**
- * Format price for display
- * @param {number} price - Price value
- * @returns {string} Formatted price string
+ * Format price for display with current currency
+ * @param {number} price - Price value in USD
+ * @returns {Promise<string>} Formatted price string
  */
-function formatPrice(price) {
-  if (price >= 1) {
-    return '$' + price.toLocaleString('en-US', { minimumFractionDigits: 2, maximumFractionDigits: 2 });
+async function formatPrice(price) {
+  let displayPrice = price;
+  
+  // Convert if not USD
+  if (currentCurrency !== 'USD') {
+    displayPrice = await convertCurrency(price, 'USD', currentCurrency);
   }
-  return '$' + price.toLocaleString('en-US', { minimumFractionDigits: 4, maximumFractionDigits: 6 });
+  
+  const symbol = getCurrencySymbol(currentCurrency);
+  
+  if (displayPrice >= 1) {
+    return symbol + displayPrice.toLocaleString('en-US', { minimumFractionDigits: 2, maximumFractionDigits: 2 });
+  }
+  return symbol + displayPrice.toLocaleString('en-US', { minimumFractionDigits: 4, maximumFractionDigits: 6 });
 }
 
 /**
@@ -118,4 +193,115 @@ export function setupSearch(allCoins, renderFunction = renderCoins) {
     renderFunction(filtered);
   });
 }
+
+/**
+ * Setup add to portfolio modal and event listeners
+ * @param {Array} coins - Array of all coin objects
+ */
+export function setupPortfolioModal(coins) {
+  const modal = document.getElementById('add-portfolio-modal');
+  const modalCloseBtn = document.getElementById('modal-close-btn');
+  const modalCancelBtn = document.getElementById('modal-cancel-btn');
+  const modalConfirmBtn = document.getElementById('modal-confirm-btn');
+  const amountInput = document.getElementById('portfolio-amount');
+  const modalCoinName = document.getElementById('modal-coin-name');
+  const modalPriceInfo = document.getElementById('modal-price-info');
+
+  if (!modal) return;
+
+  let currentCoinData = null;
+
+  // Setup add to portfolio buttons on all coin rows
+  document.addEventListener('click', (e) => {
+    if (e.target.classList.contains('add-portfolio-btn')) {
+      const coinId = e.target.getAttribute('data-coin-id');
+      const coin = coins.find(c => c.id === coinId);
+      
+      if (coin) {
+        currentCoinData = coin;
+        modalCoinName.textContent = `Add ${coin.symbol} to Portfolio`;
+        amountInput.value = '';
+        amountInput.focus();
+        updatePriceInfo();
+        modal.style.display = 'flex';
+      }
+    }
+  });
+
+  // Update price info when amount changes
+  function updatePriceInfo() {
+    if (!currentCoinData) return;
+    
+    const amount = parseFloat(amountInput.value) || 0;
+    const totalValue = amount * currentCoinData.price;
+    
+    if (amount > 0) {
+      modalPriceInfo.textContent = `Total: $${totalValue.toLocaleString('en-US', { minimumFractionDigits: 2, maximumFractionDigits: 2 })}`;
+    } else {
+      modalPriceInfo.textContent = '';
+    }
+  }
+
+  amountInput.addEventListener('input', updatePriceInfo);
+
+  // Close modal functions
+  function closeModal() {
+    modal.style.display = 'none';
+    currentCoinData = null;
+  }
+
+  modalCloseBtn.addEventListener('click', closeModal);
+  modalCancelBtn.addEventListener('click', closeModal);
+
+  // Close modal when clicking outside
+  modal.addEventListener('click', (e) => {
+    if (e.target === modal) {
+      closeModal();
+    }
+  });
+
+  // Handle confirm button
+  modalConfirmBtn.addEventListener('click', async () => {
+    if (!currentCoinData) return;
+
+    const amount = parseFloat(amountInput.value);
+    
+    // Validation
+    if (!amount || amount <= 0) {
+      alert('Please enter a valid amount');
+      return;
+    }
+
+    // Import storage functions and history
+    const { addCoinToPortfolio } = await import('./utils.js');
+    const { addHistoryEntry } = await import('./history.js');
+
+    // Add to portfolio
+    const portfolioItem = {
+      coinId: currentCoinData.id,
+      name: currentCoinData.name,
+      symbol: currentCoinData.symbol,
+      price: currentCoinData.price,
+      amount: amount,
+      addedAt: new Date().toISOString()
+    };
+
+    addCoinToPortfolio(portfolioItem);
+    
+    // Add history entry
+    addHistoryEntry({
+      action: 'added',
+      coinId: currentCoinData.id,
+      coinName: currentCoinData.name,
+      coinSymbol: currentCoinData.symbol,
+      amount: amount,
+      price: currentCoinData.price
+    });
+    
+    // Show success message and close modal
+    alert(`Added ${amount} ${currentCoinData.symbol} to your portfolio!`);
+    closeModal();
+  });
+}
+
 
