@@ -1,4 +1,4 @@
-import { loadHeaderFooter, initBottomNav, updateActiveSidebarItem } from './utils.js';
+import { loadHeaderFooter, initBottomNav, updateActiveSidebarItem, showConfirmModal, showAlertModal } from './utils.js';
 
 /**
  * Initialize settings page
@@ -106,11 +106,15 @@ function setupResetPortfolio() {
 
   if (!resetBtn) return;
 
-  resetBtn.addEventListener('click', () => {
+  resetBtn.addEventListener('click', async () => {
     // First confirmation
-    if (confirm('Are you sure you want to reset your portfolio? This will remove all coins.')) {
+    const firstConfirm = await showConfirmModal('Are you sure you want to reset your portfolio? This will remove all coins.');
+    
+    if (firstConfirm) {
       // Second confirmation to prevent accidental clicks
-      if (confirm('This action cannot be undone. Reset portfolio?')) {
+      const secondConfirm = await showConfirmModal('This action cannot be undone. Reset portfolio?');
+      
+      if (secondConfirm) {
         try {
           // Clear portfolio data
           localStorage.removeItem('portfolio');
@@ -120,13 +124,13 @@ function setupResetPortfolio() {
           window.dispatchEvent(new CustomEvent('portfolioReset'));
           
           // Show success message
-          alert('Portfolio has been reset successfully!');
+          await showAlertModal('Portfolio has been reset successfully!');
           
           // Redirect to portfolio page
           window.location.href = './portfolio.html';
         } catch (error) {
           console.error('Error resetting portfolio:', error);
-          alert('Error resetting portfolio. Please try again.');
+          await showAlertModal('Error resetting portfolio. Please try again.');
         }
       }
     }

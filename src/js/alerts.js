@@ -1,4 +1,4 @@
-import { loadHeaderFooter, initBottomNav, updateActiveSidebarItem } from './utils.js';
+import { loadHeaderFooter, initBottomNav, updateActiveSidebarItem, showConfirmModal } from './utils.js';
 
 /**
  * Mock alerts data
@@ -122,7 +122,7 @@ function renderAlerts(alerts) {
  */
 function setupAlertListeners() {
   // Toggle alert status
-  document.addEventListener('click', (e) => {
+  document.addEventListener('click', async (e) => {
     if (e.target.classList.contains('alert-btn-toggle')) {
       const alertId = parseInt(e.target.getAttribute('data-alert-id'));
       toggleAlertStatus(alertId);
@@ -131,7 +131,7 @@ function setupAlertListeners() {
     // Remove alert
     if (e.target.classList.contains('alert-btn-remove')) {
       const alertId = parseInt(e.target.getAttribute('data-alert-id'));
-      removeAlert(alertId);
+      await removeAlert(alertId);
     }
   });
 }
@@ -155,8 +155,10 @@ function toggleAlertStatus(alertId) {
  * Remove an alert
  * @param {number} alertId - The alert ID
  */
-function removeAlert(alertId) {
-  if (confirm('Are you sure you want to remove this alert?')) {
+async function removeAlert(alertId) {
+  const confirmed = await showConfirmModal('Are you sure you want to remove this alert?');
+  
+  if (confirmed) {
     const alerts = getAlerts();
     const filtered = alerts.filter(a => a.id !== alertId);
     saveAlerts(filtered);

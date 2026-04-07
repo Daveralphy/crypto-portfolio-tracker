@@ -2340,3 +2340,124 @@ body {
   }
 }
 
+/* ===========================
+   CUSTOM MODAL STYLES
+   =========================== */
+
+.custom-modal {
+  position: fixed;
+  top: 0;
+  left: 0;
+  width: 100%;
+  height: 100%;
+  background-color: rgba(0, 0, 0, 0.6);
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  z-index: 1000;
+  animation: fadeIn 0.2s ease-in-out;
+}
+
+@keyframes fadeIn {
+  from {
+    opacity: 0;
+  }
+  to {
+    opacity: 1;
+  }
+}
+
+.custom-modal-content {
+  background-color: var(--bg-secondary);
+  border: 1px solid var(--bg-tertiary);
+  border-radius: 8px;
+  padding: 2rem;
+  max-width: 400px;
+  width: 90%;
+  box-shadow: 0 10px 40px rgba(0, 0, 0, 0.3);
+  animation: slideUp 0.3s ease-out;
+}
+
+@keyframes slideUp {
+  from {
+    transform: translateY(20px);
+    opacity: 0;
+  }
+  to {
+    transform: translateY(0);
+    opacity: 1;
+  }
+}
+
+.custom-modal-content p {
+  color: var(--text-primary);
+  font-size: 1rem;
+  line-height: 1.5;
+  margin-bottom: 1.5rem;
+  margin-top: 0;
+}
+
+.modal-actions {
+  display: flex;
+  gap: 1rem;
+  justify-content: center;
+}
+
+.modal-btn-cancel,
+.modal-btn-confirm,
+.modal-btn-ok {
+  padding: 0.75rem 1.5rem;
+  border: none;
+  border-radius: 4px;
+  font-size: 0.95rem;
+  font-weight: 500;
+  cursor: pointer;
+  transition: all 0.2s ease;
+  font-family: inherit;
+}
+
+.modal-btn-cancel {
+  background-color: var(--bg-tertiary);
+  color: var(--text-primary);
+  border: 1px solid var(--bg-tertiary);
+}
+
+.modal-btn-cancel:hover {
+  background-color: var(--bg-tertiary);
+  opacity: 0.8;
+}
+
+.modal-btn-confirm,
+.modal-btn-ok {
+  background-color: var(--accent-gold);
+  color: #000;
+}
+
+.modal-btn-confirm:hover,
+.modal-btn-ok:hover {
+  background-color: var(--accent-gold-hover);
+}
+
+/* Mobile adjustments for modals */
+@media (max-width: 600px) {
+  .custom-modal-content {
+    padding: 1.5rem;
+    max-width: 90%;
+  }
+
+  .custom-modal-content p {
+    font-size: 0.95rem;
+  }
+
+  .modal-btn-cancel,
+  .modal-btn-confirm,
+  .modal-btn-ok {
+    padding: 0.6rem 1.2rem;
+    font-size: 0.9rem;
+  }
+
+  .modal-actions {
+    gap: 0.75rem;
+  }
+}
+

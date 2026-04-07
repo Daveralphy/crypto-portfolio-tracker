@@ -1,4 +1,4 @@
-import { loadHeaderFooter, initBottomNav, getPortfolio, removeCoinFromPortfolio, updateCoinAmount, updateActiveSidebarItem } from './utils.js';
+import { loadHeaderFooter, initBottomNav, getPortfolio, removeCoinFromPortfolio, updateCoinAmount, updateActiveSidebarItem, showConfirmModal } from './utils.js';
 import { fetchCoins, formatCoinData } from './api.js';
 import { addHistoryEntry } from './history.js';
 
@@ -182,7 +182,9 @@ function setupEventListeners(portfolio) {
     if (e.target.classList.contains('remove-portfolio-btn')) {
       const coinId = e.target.getAttribute('data-coin-id');
       
-      if (confirm('Are you sure you want to remove this coin from your portfolio?')) {
+      const confirmed = await showConfirmModal('Are you sure you want to remove this coin from your portfolio?');
+      
+      if (confirmed) {
         // Find the coin being removed to get its details for history
         const coinToRemove = portfolio.find(item => item.coinId === coinId);
         if (coinToRemove) {
@@ -203,35 +205,6 @@ function setupEventListeners(portfolio) {
       }
     }
   });
-
-  // Currency selector
-  const currencySelect = document.getElementById('currency-select');
-  if (currencySelect) {
-    // Set current currency in selector
-    currencySelect.value = currentCurrency;
-
-    currencySelect.addEventListener('change', async (e) => {
-      currentCurrency = e.target.value;
-      
-      // Save to localStorage
-      localStorage.setItem('preferred_currency', currentCurrency);
-      
-      // Dispatch event for settings page to sync
-      window.dispatchEvent(new CustomEvent('currencyChanged', { detail: { currency: currentCurrency } }));
-      
-      const currentPortfolio = getPortfolio();
-      
-      if (currentPortfolio && currentPortfolio.length > 0) {
-        const totalValue = currentPortfolio.reduce((sum, item) => {
-          const currentCoin = allCoins.find(c => c.id === item.coinId);
-          const currentPrice = currentCoin ? currentCoin.price : item.price;
-          return sum + (item.amount * currentPrice);
-        }, 0);
-        
-        await updatePortfolioDisplay(totalValue);
-      }
-    });
-  }
 }
 
 /**

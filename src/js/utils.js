@@ -151,6 +151,113 @@ export function initBottomNav() {
 }
 
 /**
+ * Show a confirmation modal
+ * @param {string} message - The confirmation message
+ * @returns {Promise<boolean>} Promise that resolves to true if confirmed, false if cancelled
+ */
+export function showConfirmModal(message) {
+  return new Promise((resolve) => {
+    // Remove existing modal if any
+    const existingModal = document.getElementById('confirm-modal');
+    if (existingModal) {
+      existingModal.remove();
+    }
+
+    // Create modal HTML
+    const modalHTML = `
+      <div id="confirm-modal" class="custom-modal">
+        <div class="custom-modal-content">
+          <p>${message}</p>
+          <div class="modal-actions">
+            <button class="modal-btn-cancel">Cancel</button>
+            <button class="modal-btn-confirm">Confirm</button>
+          </div>
+        </div>
+      </div>
+    `;
+
+    document.body.insertAdjacentHTML('beforeend', modalHTML);
+    const modal = document.getElementById('confirm-modal');
+    const confirmBtn = modal.querySelector('.modal-btn-confirm');
+    const cancelBtn = modal.querySelector('.modal-btn-cancel');
+
+    const cleanup = () => {
+      modal.remove();
+    };
+
+    confirmBtn.addEventListener('click', () => {
+      cleanup();
+      resolve(true);
+    });
+
+    cancelBtn.addEventListener('click', () => {
+      cleanup();
+      resolve(false);
+    });
+
+    // Allow ESC key to cancel
+    const handleEscape = (e) => {
+      if (e.key === 'Escape') {
+        document.removeEventListener('keydown', handleEscape);
+        cleanup();
+        resolve(false);
+      }
+    };
+    document.addEventListener('keydown', handleEscape);
+  });
+}
+
+/**
+ * Show an alert modal
+ * @param {string} message - The alert message
+ * @returns {Promise<void>} Promise that resolves when modal is closed
+ */
+export function showAlertModal(message) {
+  return new Promise((resolve) => {
+    // Remove existing modal if any
+    const existingModal = document.getElementById('alert-modal');
+    if (existingModal) {
+      existingModal.remove();
+    }
+
+    // Create modal HTML
+    const modalHTML = `
+      <div id="alert-modal" class="custom-modal">
+        <div class="custom-modal-content">
+          <p>${message}</p>
+          <div class="modal-actions">
+            <button class="modal-btn-ok">OK</button>
+          </div>
+        </div>
+      </div>
+    `;
+
+    document.body.insertAdjacentHTML('beforeend', modalHTML);
+    const modal = document.getElementById('alert-modal');
+    const okBtn = modal.querySelector('.modal-btn-ok');
+
+    const cleanup = () => {
+      modal.remove();
+    };
+
+    okBtn.addEventListener('click', () => {
+      cleanup();
+      resolve();
+    });
+
+    // Allow ESC key to close
+    const handleEscape = (e) => {
+      if (e.key === 'Escape') {
+        document.removeEventListener('keydown', handleEscape);
+        cleanup();
+        resolve();
+      }
+    };
+    document.addEventListener('keydown', handleEscape);
+  });
+}
+
+/**
  * Get portfolio from localStorage
  * @returns {Array} Array of portfolio items
  */

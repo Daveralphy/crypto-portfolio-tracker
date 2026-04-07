@@ -268,12 +268,13 @@ export function setupPortfolioModal(coins) {
     
     // Validation
     if (!amount || amount <= 0) {
-      alert('Please enter a valid amount');
+      const { showAlertModal } = await import('./utils.js');
+      await showAlertModal('Please enter a valid amount');
       return;
     }
 
     // Import storage functions and history
-    const { addCoinToPortfolio } = await import('./utils.js');
+    const { addCoinToPortfolio, showAlertModal } = await import('./utils.js');
     const { addHistoryEntry } = await import('./history.js');
 
     // Add to portfolio
@@ -299,7 +300,7 @@ export function setupPortfolioModal(coins) {
     });
     
     // Show success message and close modal
-    alert(`Added ${amount} ${currentCoinData.symbol} to your portfolio!`);
+    await showAlertModal(`Added ${amount} ${currentCoinData.symbol} to your portfolio!`);
     closeModal();
   });
 }
